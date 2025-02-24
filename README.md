@@ -16,8 +16,9 @@ Desenvolver um sistema web com Django para gestão de produtos, autenticação d
 ### 2.  Requisitos Técnicos
 O projeto foi desenvolvido com as seguintes premissas:
 
-- **Framework**: Django 4.2
-- **Banco de Dados**: PostgreSQL 16
+- **Linguagem**: Python 3.13.2
+- **Framework**: Django 5.1.6
+- **Banco de Dados**: SQLite3
 - **Autenticação**: Sistema nativo do Django (AbstractUser).
 - **API**: Django REST Framework.
 - **Frontend**: Templates HTML com Bootstrap para o painel web.
@@ -46,12 +47,12 @@ O projeto foi desenvolvido com as seguintes premissas:
 - Modelo `Produto` com campos:
   ```python
   class Produto(models.Model):
-      nome = models.CharField(max_length=100)
-      descricao = models.TextField()
-      preco = models.DecimalField(max_digits=10, decimal_places=2)
-      quantidade = models.IntegerField()
-      data_criacao = models.DateTimeField(auto_now_add=True)
-      usuario = models.ForeignKey(User, on_delete=models.CASCADE)```
+    nome = models.CharField(max_length=100)
+    descrição = models.TextField()
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
+    quantidade = models.IntegerField()
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)```
 - Funcionalidades CRUD integradas ao painel web.
 
 &nbsp;
@@ -60,10 +61,28 @@ O projeto foi desenvolvido com as seguintes premissas:
 
 - Métodos permitidos: GET (apenas para usuários autenticados).
 
-- Serialização dos dados em JSON.
+- Serialização dos dados em HTML.
 
 &nbsp;
-##### 3.5 - Painel Web
+##### 3.5 - Processo de Autenticação via API RESTful
+- Envie uma solicitação GET para a tela de login
+  - GET - http://127.0.0.1:8000/usuarios/login
+  - Na resposta, verifique os cookies, será possível coletar o valor de um cookie chamado csrftoken.
+- Envie uma solicitação POST para a rota de login
+  - POST URL://127.0.0.1:8000/usuarios/login
+  - Headers: Content-Type: application/x-www-form-urlencoded
+  - Headers: X-CSRFToken: <valor-do-cookie-csrftoken>
+  - Body - form-data: username: <usuario>
+  - Body - form-data: password: <senha>
+  - Body - form-data: csrfmiddlewaretoken: <valor-do-cookie-csrftoken>
+
+- Se o login for bem-sucedido, a resposta definirá dois cookies:
+  - sessionid: Identificador da sessão autenticada
+  - csrftoken: Novo token CSRF
+  
+&nbsp;
+
+##### 3.6 - Painel Web
 - Listagem de produtos em tabela com filtro por nome.
 
 - Botões condicionais (Editar/Excluir habilitados apenas para Supervisores).
@@ -98,20 +117,13 @@ O projeto foi desenvolvido com as seguintes premissas:
 │ ├── urls.py # Rotas de autenticação
 │ └── views.py # Lógica de login/logout/cadastro
 │
-├── 📁 static/ # Arquivos estáticos (CSS, JS, imagens)
-│ └── 📁 templates/ # Templates HTML
+├── 📁 static/ # Arquivos estáticos
+├── 📁 templates/ # Templates HTML
 │ ├── adicionar_produto.html
 │ ├── editar_produto.html
 │ ├── login.html
 │ ├── panel.html
 │ └── registrar.html
-│
-├── 📁 projeto/ # Ambiente virtual (venv)
-│ ├── Include/
-│ ├── Lib/
-│ ├── Scripts/
-│ ├── .gitignore
-│ └── pyvenv.cfg
 │
 ├── 📄 manage.py # Script de gerenciamento do Django
 ├── 📄 db.sqlite3 # Banco de dados SQLite (dev)
@@ -122,7 +134,7 @@ O projeto foi desenvolvido com as seguintes premissas:
 ### 5. Instruções para Execução
 ##### 5.1 - Clonar repositório:
 ```
-   git clone [URL_DO_REPOSITÓRIO]
+   git clone https://github.com/gabrielabvieira/ProjetoLogsUP.git
    cd PROJETOLOGSUP
 ```
 
@@ -138,10 +150,10 @@ O projeto foi desenvolvido com as seguintes premissas:
 ```
 pip install -r requirements.txt
 ```
-##### 5.4 - Executar migrações do banco de dados:
+##### 5.4 - Executar migrações do banco de dados (caso for usar um novo):
 
 ```python manage.py migrate```
-##### 5.5 - Criar superusuador (para acessar o Django Admin):
+##### 5.5 - Criar superusuario (para acessar o Django Admin):
 
 ```python manage.py createsuperuser```
 
@@ -158,5 +170,12 @@ Django Admin: http://127.0.0.1:8000/admin/
 
 API: http://127.0.0.1:8000/api/painel/
 ```
+
+&nbsp;
+
+### 6. Melhorias Futuras:
+
+- Design com melhor usabilidade
+- Retorno da API em JSON
 
 &nbsp;
