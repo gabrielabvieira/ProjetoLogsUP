@@ -61,10 +61,28 @@ O projeto foi desenvolvido com as seguintes premissas:
 
 - Métodos permitidos: GET (apenas para usuários autenticados).
 
-- Serialização dos dados em JSON.
+- Serialização dos dados em HTML.
 
 &nbsp;
-##### 3.5 - Painel Web
+##### 3.5 - Processo de Autenticação via API RESTful
+- Envie uma solicitação GET para a tela de login
+  - GET - http://127.0.0.1:8000/usuarios/login
+  - Na resposta, verifique os cookies, será possível coletar o valor de um cookie chamado csrftoken.
+- Envie uma solicitação POST para a rota de login
+  - POST URL://127.0.0.1:8000/usuarios/login
+  - Headers: Content-Type: application/x-www-form-urlencoded
+  - Headers: X-CSRFToken: <valor-do-cookie-csrftoken>
+  - Body - form-data: username: <usuario>
+  - Body - form-data: password: <senha>
+  - Body - form-data: csrfmiddlewaretoken: <valor-do-cookie-csrftoken>
+
+- Se o login for bem-sucedido, a resposta definirá dois cookies:
+  - sessionid: Identificador da sessão autenticada
+  - csrftoken: Novo token CSRF
+  
+&nbsp;
+
+##### 3.6 - Painel Web
 - Listagem de produtos em tabela com filtro por nome.
 
 - Botões condicionais (Editar/Excluir habilitados apenas para Supervisores).
