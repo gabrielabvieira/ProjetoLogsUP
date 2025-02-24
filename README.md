@@ -172,3 +172,10 @@ API: http://127.0.0.1:8000/api/painel/
 ```
 
 &nbsp;
+
+### 6. Melhorias Futuras:
+
+- Design com melhor usabilidade
+- Retorno da API em JSON
+
+&nbsp;
